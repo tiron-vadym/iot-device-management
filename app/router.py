@@ -17,7 +17,9 @@ async def create_device(request: web.Request) -> web.Response:
 
 @routes.get("/devices/")
 async def get_devices(request: web.Request) -> web.Response:
-    devices = await crud.get_devices()
+    skip = int(request.query.get("skip", 0))
+    limit = int(request.query.get("limit", 10))
+    devices = await crud.get_devices(skip=skip, limit=limit)
     response_data = [
         DeviceResponse.from_orm(device).dict()
         for device in devices
